@@ -1,7 +1,17 @@
 
 
+### PORTs
+3000 - Node
+8000 - Wordpress
+8080 - Jenkins
+
+
 ### Backend
 Wordpress
+
+#### Steps:
+`$ docker-compose up -d`
+
 Nodejs/Expressjs - https://expressjs.com/en/starter/generator.html
 
 #### Steps:
