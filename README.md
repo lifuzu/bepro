@@ -48,6 +48,7 @@ Nodejs/Expressjs - https://expressjs.com/en/starter/generator.html
 #### Node-red - https://nodered.org/
 #### Hubot, https://gist.github.com/jhanzo/6fcdafd653c2bcf195d0103cb3094328
 #### puppeteer
+#### Commander - https://github.com/tj/commander.js/
 
 ### Frontend
 React Native
@@ -59,6 +60,11 @@ gitemoji - https://github.com/carloscuesta/gitmoji, https://github.com/carloscue
 ```
 $ npm i -g gitmoji-cli
 $ gitmoji -i # this will create the .git/hook/prepare-commit-msg
+```
+
+lint-staged - https://github.com/okonet/lint-staged
+```
+$ npm install --save-dev lint-staged husky
 ```
 
 ### References:
