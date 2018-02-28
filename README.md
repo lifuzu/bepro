@@ -7,6 +7,7 @@
     /red/api - Node-red API
 8000 - Wordpress
 8080 - Jenkins
+8088 - Swagger API spec
 
 
 ### Backend
