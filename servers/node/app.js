@@ -29,7 +29,7 @@ app.use('/users', users);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   // filter node-red path /red, defined in bin/www
-  if (req.route.path === '/red') next()
+  if (req.route && req.route.path === '/red') next()
 
   var err = new Error('Not Found');
   err.status = 404;

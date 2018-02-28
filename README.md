@@ -2,6 +2,9 @@
 
 ### PORTs
 3000 - Node
+    /red - Node-red
+    /red/api/ui - Node-red dashboard
+    /red/api - Node-red API
 8000 - Wordpress
 8080 - Jenkins
 
