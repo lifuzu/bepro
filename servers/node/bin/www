@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('node:server');
 var http = require('http');
+var RED = require('node-red');
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +21,27 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+// Create the settings object - see default settings.js file for other options
+var settings = {
+  httpAdminRoot:"/red",
+  httpNodeRoot: "/red/api",
+  userDir: require('path').join(require('os').homedir(), ".nodered"),
+  functionGlobalContext: { }    // enables global context
+};
+
+// Initialise the runtime with a server and settings
+RED.init(server, settings);
+
+// Serve the editor UI from /red
+app.use(settings.httpAdminRoot, RED.httpAdmin);
+
+// Serve the http nodes UI from /red/api
+app.use(settings.httpNodeRoot, RED.httpNode);
+
+// Start the runtime
+RED.start();
+
 
 /**
  * Listen on provided port, on all network interfaces.
