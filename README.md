@@ -55,8 +55,11 @@ Vue.js
 Pug
 
 ### Tools
-gitemoji - https://github.com/carloscuesta/gitmoji
-`npm i -g gitmoji-cli`
+gitemoji - https://github.com/carloscuesta/gitmoji, https://github.com/carloscuesta/gitmoji-cli
+```
+$ npm i -g gitmoji-cli
+$ gitmoji -i # this will create the .git/hook/prepare-commit-msg
+```
 
 ### References:
 1. https://medium.com/nona-web/vue-js-the-wordpress-rest-api-on-a-large-content-site-210124e39bd1
