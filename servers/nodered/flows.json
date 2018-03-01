@@ -1,0 +1,413 @@
+[
+  {
+    "id": "c49031d2.3ec23",
+    "type": "tab",
+    "label": "Flow 1",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "6b2488aa.8aa378",
+    "type": "ui_tab",
+    "z": "",
+    "name": "Home",
+    "icon": "dashboard"
+  },
+  {
+    "id": "9c946eb.643be9",
+    "type": "ui_group",
+    "z": "",
+    "name": "Default",
+    "tab": "6b2488aa.8aa378",
+    "disp": true,
+    "width": "6",
+    "collapse": false
+  },
+  {
+    "id": "3036ad16.771e02",
+    "type": "ui_base",
+    "theme": {
+      "name": "theme-dark",
+      "lightTheme": {
+        "default": "#0094CE",
+        "baseColor": "#0094CE",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": true,
+        "reset": false
+      },
+      "darkTheme": {
+        "default": "#097479",
+        "baseColor": "#097479",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": true,
+        "reset": false
+      },
+      "customTheme": {
+        "name": "Untitled Theme 1",
+        "default": "#4B7930",
+        "baseColor": "#4B7930",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+      },
+      "themeState": {
+        "base-color": {
+          "default": "#097479",
+          "value": "#097479",
+          "edited": false
+        },
+        "page-titlebar-backgroundColor": {
+          "value": "#097479",
+          "edited": false
+        },
+        "page-backgroundColor": {
+          "value": "#111111",
+          "edited": false
+        },
+        "page-sidebar-backgroundColor": {
+          "value": "#000000",
+          "edited": false
+        },
+        "group-textColor": {
+          "value": "#0eb8c0",
+          "edited": false
+        },
+        "group-borderColor": {
+          "value": "#555555",
+          "edited": false
+        },
+        "group-backgroundColor": {
+          "value": "#333333",
+          "edited": false
+        },
+        "widget-textColor": {
+          "value": "#eeeeee",
+          "edited": false
+        },
+        "widget-backgroundColor": {
+          "value": "#097479",
+          "edited": false
+        },
+        "widget-borderColor": {
+          "value": "#333333",
+          "edited": false
+        },
+        "base-font": {
+          "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+        }
+      }
+    },
+    "site": {
+      "name": "Node-RED Dashboard",
+      "hideToolbar": "false",
+      "allowSwipe": "true",
+      "dateFormat": "DD/MM/YYYY",
+      "sizes": {
+        "sx": 48,
+        "sy": 48,
+        "gx": 6,
+        "gy": 6,
+        "cx": 6,
+        "cy": 6,
+        "px": 0,
+        "py": 0
+      }
+    }
+  },
+  {
+    "id": "8d6f1e51.0d658",
+    "type": "slackbot-controller",
+    "z": "",
+    "name": "Slack_Bot",
+    "bot_token": "xoxb-313288461890-Tcuu1UX4pjq45o0KmPolnKS5"
+  },
+  {
+    "id": "4e504706.1dd2a8",
+    "type": "ui_tab",
+    "name": "Tab 2",
+    "icon": "dashboard",
+    "order": 2
+  },
+  {
+    "id": "45d9100d.08b31",
+    "type": "ui_group",
+    "z": "",
+    "name": "Group 1",
+    "tab": "4e504706.1dd2a8",
+    "order": 1,
+    "disp": true,
+    "width": "6",
+    "collapse": false
+  },
+  {
+    "id": "30afed4c.4723b2",
+    "type": "ui_button",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "group": "9c946eb.643be9",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "passthru": false,
+    "label": "buttonHome",
+    "color": "",
+    "bgcolor": "",
+    "icon": "",
+    "payload": "abc",
+    "payloadType": "str",
+    "topic": "",
+    "x": 259.5,
+    "y": 157,
+    "wires": [
+      [
+        "c5fb1dc8.d1fe6"
+      ]
+    ]
+  },
+  {
+    "id": "c5fb1dc8.d1fe6",
+    "type": "debug",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "x": 507.5,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "9265d90b.ef2968",
+    "type": "ui_form",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "label": "",
+    "group": "9c946eb.643be9",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "options": [
+      {
+        "label": "Name",
+        "value": "name",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "formValue": {
+      "name": ""
+    },
+    "payload": "",
+    "topic": "",
+    "x": 239.5,
+    "y": 221,
+    "wires": [
+      [
+        "c5fb1dc8.d1fe6"
+      ]
+    ]
+  },
+  {
+    "id": "21dc58c4.888318",
+    "type": "slackbot-listen",
+    "z": "c49031d2.3ec23",
+    "slackbot": "8d6f1e51.0d658",
+    "name": "SlackBot",
+    "x": 226.5,
+    "y": 328,
+    "wires": [
+      [
+        "b2a7b695.7e4618",
+        "bb97c62e.566338"
+      ]
+    ]
+  },
+  {
+    "id": "b2a7b695.7e4618",
+    "type": "debug",
+    "z": "c49031d2.3ec23",
+    "name": "Debug",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "x": 498.5,
+    "y": 324,
+    "wires": []
+  },
+  {
+    "id": "3f1a0cee.9cef34",
+    "type": "ui_gauge",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "group": "9c946eb.643be9",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "gtype": "gage",
+    "title": "Gauge",
+    "label": "units",
+    "format": "{{value}}",
+    "min": 0,
+    "max": 10,
+    "colors": [
+      "#00b500",
+      "#e6e600",
+      "#ca3838"
+    ],
+    "seg1": "",
+    "seg2": "",
+    "x": 643.5,
+    "y": 90,
+    "wires": []
+  },
+  {
+    "id": "d4a1e9ae.9032d8",
+    "type": "ui_numeric",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "label": "numeric",
+    "group": "9c946eb.643be9",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "passthru": true,
+    "topic": "",
+    "format": "{{value}}",
+    "min": 0,
+    "max": 10,
+    "step": 1,
+    "x": 252.5,
+    "y": 107,
+    "wires": [
+      [
+        "3f1a0cee.9cef34",
+        "16de5dd1.649ce2"
+      ]
+    ]
+  },
+  {
+    "id": "df6afc0f.06df5",
+    "type": "inject",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 238.5,
+    "y": 49,
+    "wires": [
+      [
+        "25d34536.69f1ea"
+      ]
+    ]
+  },
+  {
+    "id": "25d34536.69f1ea",
+    "type": "function",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "func": "msg.payload = msg.payload % 10\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 409.5,
+    "y": 51,
+    "wires": [
+      [
+        "d4a1e9ae.9032d8"
+      ]
+    ]
+  },
+  {
+    "id": "bb97c62e.566338",
+    "type": "slackbot-reply",
+    "z": "c49031d2.3ec23",
+    "slackbot": "8d6f1e51.0d658",
+    "name": "",
+    "x": 487.5,
+    "y": 432,
+    "wires": []
+  },
+  {
+    "id": "76bd3b8d.b81754",
+    "type": "http in",
+    "z": "c49031d2.3ec23",
+    "name": "Webhook",
+    "url": "/webhook",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 225.5,
+    "y": 530,
+    "wires": [
+      [
+        "b2a7b695.7e4618",
+        "d7c8e767.cfca88",
+        "3bad079.98f7df8"
+      ]
+    ]
+  },
+  {
+    "id": "d7c8e767.cfca88",
+    "type": "http response",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "statusCode": "200",
+    "headers": {},
+    "x": 511.5,
+    "y": 626,
+    "wires": []
+  },
+  {
+    "id": "3bad079.98f7df8",
+    "type": "http request",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "method": "POST",
+    "ret": "txt",
+    "url": "https://hooks.slack.com/services/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",
+    "tls": "",
+    "x": 738.5,
+    "y": 525,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "16de5dd1.649ce2",
+    "type": "debug",
+    "z": "c49031d2.3ec23",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "x": 638.5,
+    "y": 126,
+    "wires": []
+  },
+  {
+    "id": "f79f83f4.763cf",
+    "type": "http in",
+    "z": "c49031d2.3ec23",
+    "name": "Jenkins",
+    "url": "/jenkins",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 217.5,
+    "y": 427,
+    "wires": [
+      [
+        "b2a7b695.7e4618",
+        "d7c8e767.cfca88"
+      ]
+    ]
+  }
+]

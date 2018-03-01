@@ -1,9 +1,9 @@
 module.exports = {
   jenkins: {
     username: 'admin',
-    password: 'thejenkins',
+    password: '6cbc33e9222ef2703ee2eed0009fc967',
     protocol: 'http',
     uri: 'localhost',
-    port: 8080
-  }
-}
+    port: 8080,
+  },
+};
