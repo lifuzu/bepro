@@ -7,6 +7,7 @@
     /red/api - Node-red API
 8000 - Wordpress
 8080 - Jenkins
+8086 - Influxdb
 8088 - Swagger API spec
 
 
@@ -68,6 +69,10 @@ lint-staged - https://github.com/okonet/lint-staged
 ```
 $ npm install --save-dev lint-staged husky
 ```
+
+#### Monitoring
+ctop - https://github.com/bcicen/ctop
+netdata - https://github.com/firehol/netdata
 
 ### References:
 1. https://medium.com/nona-web/vue-js-the-wordpress-rest-api-on-a-large-content-site-210124e39bd1

@@ -41,6 +41,17 @@ services:
     ports:
       - "8088:8080"
 
+  influxdb:
+    image: influxdb
+    container_name: influxdb
+    restart: always
+    ports:
+      - "8086:8086"
+      - "8083:8083"
+    volumes:
+      - influxdb_home:/var/lib/influxdb
+
 volumes:
   dbdata:
   jenkins_home:
+  influxdb_home:
