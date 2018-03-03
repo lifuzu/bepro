@@ -1,0 +1,33 @@
+---
+  kind: Service
+  apiVersion: v1
+  metadata:
+    name: jenkins
+    labels:
+      app: jenkins
+  spec:
+    # comment or delete the following line if you want to use a LoadBalancer
+    type: NodePort
+    # if your cluster supports it, uncomment the following to automatically create
+    # an external load-balanced IP for the frontend service.
+    # type: LoadBalancer
+    selector:
+      app: jenkins
+    ports:
+    - name: jenkins-ui
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+  kind: Service
+  apiVersion: v1
+  metadata:
+    name: jenkins-discovery
+  spec:
+    selector:
+      app: jenkins
+    ports:
+      - name: slaves
+        protocol: TCP
+        port: 50000
+        targetPort: 50000
