@@ -9,6 +9,8 @@
 8080 - Jenkins
 8086 - Influxdb
 8088 - Swagger API spec
+8089 - Rethinkdb
+28015 - Rethinkdb
 
 
 ### Backend

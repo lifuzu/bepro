@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "precommit": "lint-staged",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "lint-staged": {
     "*.js": [
