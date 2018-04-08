@@ -12,6 +12,11 @@ export default new Router({
     },
     {
       path: '/',
+      name: 'editor-page',
+      component: require('@/components/EditorPage').default
+    },
+    {
+      path: '/p',
       name: 'pokecard-page',
       component: require('@/components/PokecardPage').default
     },
