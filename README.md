@@ -1,4 +1,5 @@
 
+A practical project to integrate almost everything interesting for learning purpose!
 
 ### PORTs
 3000 - Node
