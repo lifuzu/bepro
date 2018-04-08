@@ -6,13 +6,18 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/landing',
       name: 'landing-page',
       component: require('@/components/LandingPage').default
     },
     {
+      path: '/',
+      name: 'pokecard-page',
+      component: require('@/components/PokecardPage').default
+    },
+    {
       path: '*',
-      redirect: '/'
+      redirect: '/pokecard'
     }
   ]
 })
