@@ -1,13 +1,26 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { subscribeToTimer } from './socket';
+
 export default class App extends React.Component {
+
+  state = {
+    timestamp: 'no timestamp yet'
+  }
+
+  constructor(props) {
+    super(props)
+
+    subscribeToTimer((err, timestamp) => this.setState({
+      timestamp
+    }))
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+        <Text>{ this.state.timestamp }</Text>
       </View>
     );
   }
