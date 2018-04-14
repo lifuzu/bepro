@@ -48,18 +48,20 @@ RED.start();
  * Create Socket.io server.
  */
 var io = require('socket.io')(server);
+io.of('/time').on('connection', function(socket){
+  socket.on('subscribeToTimer', (interval) => {
+    console.log('client is subscribing to timer with interval ', interval);
+    setInterval(() => {
+      socket.emit('timer', new Date());
+    }, interval);
+  });
+});
 io.on('connection', function(socket){
   socket.on('event', function(data){
     console.log('event - ', JSON.stringify(data));
   });
   socket.on('disconnect', function(){
     console.log('disconnected');
-  });
-  socket.on('subscribeToTimer', (interval) => {
-    console.log('client is subscribing to timer with interval ', interval);
-    setInterval(() => {
-      socket.emit('timer', new Date());
-    }, interval);
   });
 });
 app.set('io', io);
