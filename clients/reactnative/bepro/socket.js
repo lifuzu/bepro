@@ -4,4 +4,10 @@ function subscribeToTimer(cb) {
   socket.on('timer', timestamp => cb(null, timestamp));
   socket.emit('subscribeToTimer', 1000);
 }
-export { subscribeToTimer }
+
+const wechat = openSocket('http://localhost:3000/wechat');
+function scanToWechat(cb) {
+  wechat.on('scan', url => cb(null, url));
+}
+
+export { subscribeToTimer, scanToWechat }

@@ -23,6 +23,10 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+/**
+ * Create Node-RED server.
+ */
+
 // Create the settings object - see default settings.js file for other options
 var settings = {
   httpAdminRoot:"/red",
@@ -65,7 +69,33 @@ io.on('connection', function(socket){
   });
 });
 app.set('io', io);
+// Usage: var io = req.app.get('io');
 
+/**
+ * Create Wechaty service
+ */
+const { Wechaty, Room, MediaMessage } = require('wechaty');
+const wechat = Wechaty.instance()
+
+io.of('/wechat').on('connection', function(socket){
+  socket.on('disconnect', function(){
+    console.log('disconnected');
+  });
+});
+
+wechat.on('scan', (url, code) => {
+  if (!/201|200/.test(String(code))) {
+    console.log(`Scan QR code to login: ${code}\n${url}`)
+    io.of('/wechat').emit('scan', url);
+  }
+})
+.on('login', user => console.log(`User ${user} logined`))
+.on('message', message => console.log(`Message: ${message}`))
+.start()
+.catch(async function(e) {
+  await wechat.stop()
+})
+app.set('wechat', wechat);
 
 /**
  * Create Jenkins client.
