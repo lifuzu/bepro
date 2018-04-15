@@ -51,7 +51,7 @@ RED.start();
 /**
  * Create Socket.io server.
  */
-var io = require('socket.io')(server);
+var io = require('socket.io')(server, {pingTimeout: 30000});
 io.of('/time').on('connection', function(socket){
   socket.on('subscribeToTimer', (interval) => {
     console.log('client is subscribing to timer with interval ', interval);
