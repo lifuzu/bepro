@@ -1,9 +1,9 @@
 import React from 'react';
-import { Animated, Button, Dimensions, PanResponder, PixelRatio, StyleSheet, Text, View, Image } from 'react-native';
+import { Animated, Button, Dimensions, PanResponder, PixelRatio, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 
 import { subscribeToTimer, scanToWechat } from './socket';
 
-import { FileSystem, Constants, takeSnapshotAsync } from 'expo';
+import { Camera, Permissions, FileSystem, Constants, takeSnapshotAsync } from 'expo';
 
 // const { screenHeight, screenWidth} = Dimensions.get('window');
 
@@ -44,6 +44,9 @@ export default class App extends React.Component {
   state = {
     timestamp: 'no timestamp yet',
     loginUrl: 'no login url yet',
+
+    hasCameraPermission: null,
+    type: 'front',
   }
 
   constructor(props) {
@@ -64,7 +67,7 @@ export default class App extends React.Component {
     };
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     // Add a listener for the delta value change
     // this._val = { x:0, y:0 }
     // this.state.pan.addListener((value) => this._val = value);
@@ -87,6 +90,9 @@ export default class App extends React.Component {
 
     // Initialize image with actual size
     // Image.getSize(obj, (width, height) => {this.setState({width: screenWidth, height: height/width*screenWidth})});
+
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ hasCameraPermission: status === 'granted' });
   }
 
   onLayout = (e) => {
@@ -140,6 +146,36 @@ export default class App extends React.Component {
           backgroundColor: '#eee',
         }}
       >
+        <Camera style={{ flex: 1 }} type={this.state.type}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'transparent',
+              flexDirection: 'row',
+            }}>
+            <TouchableOpacity
+              style={{
+                flex: 0.5,
+                backgroundColor: 'transparent',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                paddingTop: Constants.statusBarHeight / 2,
+              }}
+              onPress={() => {
+                this.setState({
+                  type: this.state.type === Camera.Constants.Type.back
+                    ? Camera.Constants.Type.front
+                    : Camera.Constants.Type.back,
+                });
+              }}>
+              <Text
+                style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
+                {' '}Flip{' '}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Camera>
+
         <View
           style={{
             position: 'absolute',
