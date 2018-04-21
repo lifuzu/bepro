@@ -1,7 +1,9 @@
 import React from 'react';
-import { Animated, Button, Dimensions, PanResponder, StyleSheet, Text, View, Image } from 'react-native';
+import { Animated, Button, Dimensions, PanResponder, PixelRatio, StyleSheet, Text, View, Image } from 'react-native';
 
 import { subscribeToTimer, scanToWechat } from './socket';
+
+import { FileSystem, Constants, takeSnapshotAsync } from 'expo';
 
 // const { screenHeight, screenWidth} = Dimensions.get('window');
 
@@ -12,7 +14,32 @@ const obj = 'http://www.pngmart.com/files/1/Glasses-PNG-Clipart.png'
 const text = ''
 // 'This is some text inlaid in an <Image />';
 
+const VIEWSNAPS_DIR = FileSystem.documentDirectory + 'images/'
+
+export const timestamp = (presision=1) => Math.round((new Date()).getTime() / presision);
+
+const ensureDirAsync = async (dir, intermediates=true) => {
+    const props =  await FileSystem.getInfoAsync(dir)
+    if( props.exists && props.isDirectory){
+      return props;
+    }
+    await FileSystem.makeDirectoryAsync(dir, {intermediates})
+    return await ensureDirAsync(dir, intermediates)
+}
+
+const snapViewAsync =  async (view, format='png') => {
+    const dir = await ensureDirAsync(VIEWSNAPS_DIR);
+    const snapshot = `${dir.uri}${timestamp()}.${format}`;
+    const temp = await takeSnapshotAsync(view, {format, quality:1, result:'file'})
+    await FileSystem.moveAsync({from:temp, to:snapshot});
+    const info =  await FileSystem.getInfoAsync(snapshot, {md5:true})
+    const type = `image/${format}`;
+    return { ...info, type};
+}
+
 export default class App extends React.Component {
+
+  view = null;
 
   state = {
     timestamp: 'no timestamp yet',
@@ -93,6 +120,12 @@ export default class App extends React.Component {
     })
   }
 
+  onPressButtonSnapshot = async () => {
+
+    const snapshot = await snapViewAsync(this.view)
+    console.log(snapshot) // eslint-disable-line  no-undef
+  }
+
   render() {
     const resizeMode = 'center'
 
@@ -101,7 +134,7 @@ export default class App extends React.Component {
     }
 
     return (
-      <View
+      <View ref={view => this.view = view}
         style={{
           flex: 1,
           backgroundColor: '#eee',
@@ -138,6 +171,12 @@ export default class App extends React.Component {
           <Button
             onPress={this.onPressButtonBorderWidth}
             title="Toggle"
+            color="#841584"
+            accessibilityLabel="Learn more about this purple button"
+          />
+          <Button
+            onPress={this.onPressButtonSnapshot}
+            title="Snap"
             color="#841584"
             accessibilityLabel="Learn more about this purple button"
           />
