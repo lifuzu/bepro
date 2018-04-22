@@ -22,7 +22,33 @@ const wbOrder = {
   incandescent: 'auto',
 };
 
+const VIEWSNAPS_DIR = FileSystem.documentDirectory + 'photos/'
+
+export const timestamp = (presision=1) => Math.round((new Date()).getTime() / presision);
+
+const ensureDirAsync = async (dir, intermediates=true) => {
+    const props =  await FileSystem.getInfoAsync(dir)
+    if( props.exists && props.isDirectory){
+      return props;
+    }
+    await FileSystem.makeDirectoryAsync(dir, {intermediates})
+    return await ensureDirAsync(dir, intermediates)
+}
+
+const snapPhotoAsync =  async (camera, format='jpg') => {
+    const dir = await ensureDirAsync(VIEWSNAPS_DIR);
+    const snapshot = `${dir.uri}/${timestamp()}.${format}`;
+    const data = await camera.takePictureAsync()
+    await FileSystem.moveAsync({from:data.uri, to:snapshot});
+    const info =  await FileSystem.getInfoAsync(snapshot, {md5:true})
+    const type = `image/${format}`;
+    return { ...info, type};
+}
+
 export default class CameraScreen extends React.Component {
+
+  camera = null
+
   state = {
     flash: 'off',
     zoom: 0,
@@ -32,7 +58,6 @@ export default class CameraScreen extends React.Component {
     whiteBalance: 'auto',
     ratio: '16:9',
     ratios: [],
-    photoId: 1,
     showGallery: false,
     photos: [],
     faces: [],
@@ -42,12 +67,6 @@ export default class CameraScreen extends React.Component {
   async componentWillMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ permissionsGranted: status === 'granted' });
-  }
-
-  componentDidMount() {
-    FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'photos').catch(e => {
-      console.log(e, 'Directory exists');  // eslint-disable-line  no-undef
-    });
   }
 
   getRatios = async () => {
@@ -110,18 +129,12 @@ export default class CameraScreen extends React.Component {
   }
 
   takePicture = async function() {
+
     if (this.camera) {
-      this.camera.takePictureAsync().then(data => {
-        FileSystem.moveAsync({
-          from: data.uri,
-          to: `${FileSystem.documentDirectory}photos/Photo_${this.state.photoId}.jpg`,
-        }).then(() => {
-          this.setState({
-            photoId: this.state.photoId + 1,
-          });
-          Vibration.vibrate();
-        });
-      });
+      const snapshot = await snapPhotoAsync(this.camera)
+      console.log(snapshot) // eslint-disable-line  no-undef
+
+      Vibration.vibrate();
     }
   };
 

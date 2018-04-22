@@ -4,6 +4,8 @@ import { FileSystem, FaceDetector, MediaLibrary } from 'expo';
 
 const pictureSize = 150;
 
+const VIEWSNAPS_DIR = FileSystem.documentDirectory + 'photos/'
+
 export default class GalleryScreen extends React.Component {
   state = {
     faces: {},
@@ -14,7 +16,7 @@ export default class GalleryScreen extends React.Component {
 
   componentDidMount() {
     this._mounted = true;
-    FileSystem.readDirectoryAsync(FileSystem.documentDirectory + 'photos').then(photos => {
+    FileSystem.readDirectoryAsync(VIEWSNAPS_DIR).then(photos => {
       if (this._mounted) {
         this.setState(
           {
