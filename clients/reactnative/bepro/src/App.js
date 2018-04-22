@@ -9,6 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import GlassesScreen from './screens/Glasses'
 import CameraScreen from './screens/Camera'
+import GalleryScreen from './screens/Gallery'
 
 const TabNav = TabNavigator(
   {
@@ -50,12 +51,12 @@ const AppNavigator = StackNavigator(
     Index: {
       screen: TabNav,
     },
-//     NotifSettings: {
-//       screen: NotificationsSettingsScreen,
-//       navigationOptions: {
-//         title: 'Notifications',
-//       },
-//     },
+    Gallery: {
+      screen: GalleryScreen,
+      navigationOptions: {
+        title: 'Gallery',
+      },
+    },
 //     Profile: {
 //       screen: ProfileScreen,
 //       path: '/people/:name',

@@ -134,7 +134,9 @@ export default class CameraScreen extends React.Component {
       const snapshot = await snapPhotoAsync(this.camera)
       console.log(snapshot) // eslint-disable-line  no-undef
 
-      Vibration.vibrate();
+      // Vibration.vibrate();
+
+      this.props.navigation.navigate('Settings', { uri: snapshot.uri})
     }
   };
 

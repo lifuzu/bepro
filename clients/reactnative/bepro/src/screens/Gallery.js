@@ -118,7 +118,6 @@ export default class GalleryScreen extends React.Component {
           { rotateZ: `${(face.rollAngle || 0).toFixed(0)}deg` },
           { rotateY: `${(face.yawAngle || 0).toFixed(0)}deg` },
         ]}>
-        <Text style={styles.faceText}>😁 {(face.smilingProbability * 100).toFixed(0)}%</Text>
       </View>
     );
   };
@@ -137,6 +136,7 @@ export default class GalleryScreen extends React.Component {
         <ScrollView contentComponentStyle={{ flex: 1 }}>
           <View style={styles.pictures}>
             {this.state.photos.map(photoUri => (
+              <TouchableOpacity key={photoUri} onPress={() => this.props.navigation.navigate('Settings')}>
               <View style={styles.pictureWrapper} key={photoUri}>
                 <Image
                   key={photoUri}
@@ -149,6 +149,7 @@ export default class GalleryScreen extends React.Component {
                   {this.renderFaces(`${FileSystem.documentDirectory}photos/${photoUri}`)}
                 </View>
               </View>
+              </TouchableOpacity>
             ))}
           </View>
         </ScrollView>

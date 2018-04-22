@@ -60,7 +60,7 @@ export default class GlassesScreen extends React.Component {
     this.state = {
       pan: new Animated.ValueXY(),
       panValue: 0,
-      borderWidth: 1
+      borderWidth: 2
     };
   }
 
@@ -116,7 +116,7 @@ export default class GlassesScreen extends React.Component {
   onPressButtonBorderWidth = () => {
 
     this.setState({
-      borderWidth: this.state.borderWidth === 1 ? 0 : 1
+      borderWidth: this.state.borderWidth === 2 ? 0 : 2
     })
   }
 
@@ -154,7 +154,7 @@ export default class GlassesScreen extends React.Component {
               flex: 1,
               resizeMode,
             }}
-            source={{ uri: remote }}
+            source={{ uri: this.props.navigation.state.params.uri ? this.props.navigation.state.params.uri : remote }}
           />
           <Button
             onPress={this.onPressButtonDecrease}
@@ -180,24 +180,6 @@ export default class GlassesScreen extends React.Component {
             color="#841584"
             accessibilityLabel="Learn more about this purple button"
           />
-        </View>
-
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'transparent',
-            justifyContent: 'center',
-          }}
-        >
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 40,
-            }}
-          >
-            {text}
-          </Text>
-
         </View>
 
         <Animated.View
