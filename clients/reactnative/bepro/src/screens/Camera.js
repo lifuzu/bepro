@@ -1,10 +1,10 @@
 import { Constants, Camera, FileSystem, Permissions } from 'expo';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity, Slider, Vibration } from 'react-native';
 import GalleryScreen from './Gallery';
 import isIPhoneX from 'react-native-is-iphonex';
 
-const landmarkSize = 2;
+const landmarkSize = 5;
 
 const flashModeOrder = {
   off: 'on',
@@ -28,7 +28,7 @@ export default class CameraScreen extends React.Component {
     zoom: 0,
     autoFocus: 'on',
     depth: 0,
-    type: 'back',
+    type: 'front',
     whiteBalance: 'auto',
     ratio: '16:9',
     ratios: [],
@@ -136,22 +136,15 @@ export default class CameraScreen extends React.Component {
     return (
       <View
         key={faceID}
-        transform={[
-          { perspective: 600 },
-          { rotateZ: `${rollAngle.toFixed(0)}deg` },
-          { rotateY: `${yawAngle.toFixed(0)}deg` },
-        ]}
         style={[
           styles.face,
           {
             ...bounds.size,
             left: bounds.origin.x,
             top: bounds.origin.y,
+            height: bounds.size.height * 6 / 5,
           },
         ]}>
-        <Text style={styles.faceText}>ID: {faceID}</Text>
-        <Text style={styles.faceText}>rollAngle: {rollAngle.toFixed(0)}</Text>
-        <Text style={styles.faceText}>yawAngle: {yawAngle.toFixed(0)}</Text>
       </View>
     );
   }
@@ -173,15 +166,6 @@ export default class CameraScreen extends React.Component {
       <View key={`landmarks-${face.faceID}`}>
         {renderLandmark(face.leftEyePosition)}
         {renderLandmark(face.rightEyePosition)}
-        {renderLandmark(face.leftEarPosition)}
-        {renderLandmark(face.rightEarPosition)}
-        {renderLandmark(face.leftCheekPosition)}
-        {renderLandmark(face.rightCheekPosition)}
-        {renderLandmark(face.leftMouthPosition)}
-        {renderLandmark(face.mouthPosition)}
-        {renderLandmark(face.rightMouthPosition)}
-        {renderLandmark(face.noseBasePosition)}
-        {renderLandmark(face.bottomMouthPosition)}
       </View>
     );
   }
@@ -249,25 +233,10 @@ export default class CameraScreen extends React.Component {
             <Text style={styles.flipText}> WB: {this.state.whiteBalance} </Text>
           </TouchableOpacity>
         </View>
+        <Image style={styles.faceOutline} source={require("../assets/FaceOutline.png")} />
         <View
           style={{
-            flex: 0.4,
-            backgroundColor: 'transparent',
-            flexDirection: 'row',
-            alignSelf: 'flex-end',
-            marginBottom: -5,
-          }}>
-          {this.state.autoFocus !== 'on' ? (
-            <Slider
-              style={{ width: 150, marginTop: 15, marginRight: 15, alignSelf: 'flex-end' }}
-              onValueChange={this.setFocusDepth.bind(this)}
-              step={0.1}
-            />
-          ) : null}
-        </View>
-        <View
-          style={{
-            flex: 0.1,
+            flex: 0.2,
             paddingBottom: isIPhoneX ? 20 : 0,
             backgroundColor: 'transparent',
             flexDirection: 'row',
@@ -390,5 +359,10 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  faceOutline: {
+    flex: 1,
+    alignSelf: 'center',
+    top: -50,
   },
 });
