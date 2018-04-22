@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Button, Dimensions, PanResponder, PixelRatio, StyleSheet, Text, View, Image } from 'react-native';
+import { Animated, Button, Dimensions, PanResponder, StyleSheet, Text, View, Image } from 'react-native';
 
 import { subscribeToTimer, scanToWechat } from '../../socket';
 
@@ -64,7 +64,7 @@ export default class GlassesScreen extends React.Component {
     };
   }
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     // Add a listener for the delta value change
     // this._val = { x:0, y:0 }
     // this.state.pan.addListener((value) => this._val = value);
@@ -226,7 +226,6 @@ export default class GlassesScreen extends React.Component {
   }
 }
 
-let CIRCLE_RADIUS = 30;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -234,15 +233,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10
-  },
-  circle: {
-    backgroundColor: "skyblue",
-    width: CIRCLE_RADIUS * 2,
-    height: CIRCLE_RADIUS * 2,
-    borderRadius: CIRCLE_RADIUS
-  }
 });
