@@ -215,25 +215,17 @@ export default class CameraScreen extends React.Component {
         onFacesDetected={this.onFacesDetected}
         onFaceDetectionError={this.onFaceDetectionError}
         focusDepth={this.state.depth}>
+
         <View
           style={{
-            flex: 0.5,
-            backgroundColor: 'transparent',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            paddingTop: Constants.statusBarHeight / 2,
+            flex: 0.8,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 100,
           }}>
-          <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
-            <Text style={styles.flipText}> FLIP </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
-            <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.flipButton} onPress={this.toggleWB.bind(this)}>
-            <Text style={styles.flipText}> WB: {this.state.whiteBalance} </Text>
-          </TouchableOpacity>
+          <Image style={[styles.faceOutline]} source={require("../assets/FaceOutline.png")} />
         </View>
-        <Image style={styles.faceOutline} source={require("../assets/FaceOutline.png")} />
+
         <View
           style={{
             flex: 0.2,
@@ -243,6 +235,11 @@ export default class CameraScreen extends React.Component {
             alignSelf: 'flex-end',
           }}>
           <TouchableOpacity
+            style={[styles.flipButton, { flex: 0.25, alignSelf: 'flex-end' }]}
+            onPress={this.toggleFacing.bind(this)}>
+            <Text style={styles.flipText}> FLIP </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
             onPress={this.zoomIn.bind(this)}>
             <Text style={styles.flipText}> + </Text>
@@ -251,11 +248,6 @@ export default class CameraScreen extends React.Component {
             style={[styles.flipButton, { flex: 0.1, alignSelf: 'flex-end' }]}
             onPress={this.zoomOut.bind(this)}>
             <Text style={styles.flipText}> - </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.flipButton, { flex: 0.25, alignSelf: 'flex-end' }]}
-            onPress={this.toggleFocus.bind(this)}>
-            <Text style={styles.flipText}> AF : {this.state.autoFocus} </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }]}
@@ -361,8 +353,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   faceOutline: {
-    flex: 1,
     alignSelf: 'center',
-    top: -50,
   },
 });
