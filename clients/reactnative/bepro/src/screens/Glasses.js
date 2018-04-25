@@ -15,6 +15,7 @@ const text = ''
 // 'This is some text inlaid in an <Image />';
 
 const VIEWSNAPS_DIR = FileSystem.documentDirectory + 'images/'
+const BORDER_WIDTH = StyleSheet.hairlineWidth
 
 export const timestamp = (presision=1) => Math.round((new Date()).getTime() / presision);
 
@@ -60,7 +61,7 @@ export default class GlassesScreen extends React.Component {
     this.state = {
       pan: new Animated.ValueXY(),
       panValue: 0,
-      borderWidth: 2
+      borderWidth: BORDER_WIDTH
     };
   }
 
@@ -116,7 +117,7 @@ export default class GlassesScreen extends React.Component {
   onPressButtonBorderWidth = () => {
 
     this.setState({
-      borderWidth: this.state.borderWidth === 2 ? 0 : 2
+      borderWidth: this.state.borderWidth === BORDER_WIDTH ? 0 : BORDER_WIDTH
     })
   }
 
@@ -186,7 +187,7 @@ export default class GlassesScreen extends React.Component {
           onLayout={this.onLayout}
           {...this.panResponder.panHandlers}
           style={[panStyle, {
-
+            borderWidth: this.state.borderWidth,
             width: this.state.width ? this.state.width : '100%',
             height: this.state.width / 2,
           }]}
@@ -194,7 +195,6 @@ export default class GlassesScreen extends React.Component {
           <Image
             style={{
               flex: 1,
-              borderWidth: this.state.borderWidth,
               height: 20,
               resizeMode: 'contain',
             }}
