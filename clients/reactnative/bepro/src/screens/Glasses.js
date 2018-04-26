@@ -1,7 +1,8 @@
 import React from 'react';
-import { Animated, Button, Dimensions, PanResponder, StyleSheet, Text, View, Image } from 'react-native';
+import { Animated, Button, Dimensions, Image, PanResponder, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { FileSystem, Constants, takeSnapshotAsync } from 'expo';
+import isIPhoneX from 'react-native-is-iphonex';
 
 type TouchType = {
   pageX: number,
@@ -419,63 +420,76 @@ export default class GlassesScreen extends React.Component {
     }
 
     return (
-      <View ref={view => this.view = view}
+      <View
         style={{
           flex: 1,
           backgroundColor: '#eee',
         }}
       >
+        <View ref={view => this.view = view}
+          style={{
+            flex: 0.8,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 100,
+          }}>
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <Image
+              style={{
+                flex: 1,
+                resizeMode,
+              }}
+              source={{ uri: this.props.navigation.state.params.uri ? this.props.navigation.state.params.uri : remote }}
+            />
+          </View>
+
+          <Animated.View
+            onLayout={this.onLayout}
+            {...this.panResponder.panHandlers}
+            style={[panStyle, {
+              borderWidth: this.state.borderWidth,
+              width: this.state.width ? this.state.width : '100%',
+              height: this.state.width / 2,
+            }]}
+            >
+            <Image
+              style={{
+                flex: 1,
+                height: IMAGE_HEIGHT,
+                resizeMode: 'contain',
+              }}
+              source={{ uri: obj }}
+            />
+
+          </Animated.View>
+        </View>
         <View
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-          }}
-        >
-          <Image
-            style={{
-              flex: 1,
-              resizeMode,
-            }}
-            source={{ uri: this.props.navigation.state.params.uri ? this.props.navigation.state.params.uri : remote }}
-          />
-
-          <Button
-            onPress={this.onPressButtonBorderWidth}
-            title="Toggle"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          />
-          <Button
-            onPress={this.onPressButtonSnapshot}
-            title="Snap"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          />
+            flex: 0.2,
+            paddingBottom: isIPhoneX ? 20 : 0,
+            backgroundColor: 'transparent',
+            flexDirection: 'row',
+            alignSelf: 'flex-end',
+          }}>
+          <TouchableOpacity
+            style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }]}
+            onPress={this.onPressButtonBorderWidth.bind(this)}>
+            <Text style={styles.flipText}> Toggle </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.flipButton, styles.galleryButton, { flex: 0.25, alignSelf: 'flex-end' }]}
+            onPress={this.onPressButtonSnapshot.bind(this)}>
+            <Text style={styles.flipText}> Snap </Text>
+          </TouchableOpacity>
         </View>
-
-        <Animated.View
-          onLayout={this.onLayout}
-          {...this.panResponder.panHandlers}
-          style={[panStyle, {
-            borderWidth: this.state.borderWidth,
-            width: this.state.width ? this.state.width : '100%',
-            height: this.state.width / 2,
-          }]}
-          >
-          <Image
-            style={{
-              flex: 1,
-              height: IMAGE_HEIGHT,
-              resizeMode: 'contain',
-            }}
-            source={{ uri: obj }}
-          />
-
-        </Animated.View>
-
       </View>
     );
   }
@@ -498,5 +512,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  flipButton: {
+    flex: 0.3,
+    height: 40,
+    marginHorizontal: 2,
+    marginBottom: 10,
+    marginTop: 20,
+    borderRadius: 8,
+    borderColor: 'white',
+    borderWidth: 1,
+    padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  flipText: {
+    color: 'white',
+    fontSize: 15,
+  },
+  picButton: {
+    backgroundColor: 'darkseagreen',
   },
 });
