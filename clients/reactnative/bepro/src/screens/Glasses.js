@@ -253,12 +253,12 @@ export default class GlassesScreen extends React.Component {
     if (nextScale < imageInitialScale) {
       nextScale = imageInitialScale;
       this.setState({
-        width: this.state.width > screenWidth / 2 ? this.state.width - 5 : screenWidth / 2
+        width: this.state.width > screenWidth / 5 ? this.state.width - 10 : screenWidth / 5
       })
     } else if (nextScale > SCALE_MAXIMUM) {
       nextScale = SCALE_MAXIMUM;
       this.setState({
-        width: this.state.width < screenWidth ? this.state.width + 5 : screenWidth
+        width: this.state.width < screenWidth ? this.state.width + 10 : screenWidth
       })
     }
 
@@ -406,6 +406,18 @@ export default class GlassesScreen extends React.Component {
     console.log(snapshot) // eslint-disable-line  no-undef
   }
 
+  onPressButtonIncrease = () => {
+    this.setState({
+      width: this.state.width < screenWidth ? this.state.width + 2 : screenWidth
+    })
+  }
+
+  onPressButtonDecrease = () => {
+    this.setState({
+      width: this.state.width > screenWidth / 5 ? this.state.width - 2 : screenWidth / 5
+    })
+  }
+
   render() {
     const resizeMode = 'center'
 
@@ -471,18 +483,42 @@ export default class GlassesScreen extends React.Component {
             paddingBottom: isIPhoneX ? 20 : 0,
             backgroundColor: 'transparent',
             flexDirection: 'row',
-            alignSelf: 'flex-end',
+            borderWidth: 1,
           }}>
-          <TouchableOpacity
-            style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }]}
-            onPress={this.onPressButtonBorderWidth.bind(this)}>
-            <Text style={styles.flipText}> Toggle </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.flipButton, styles.galleryButton, { flex: 0.25, alignSelf: 'flex-end' }]}
-            onPress={this.onPressButtonSnapshot.bind(this)}>
-            <Text style={styles.flipText}> Snap </Text>
-          </TouchableOpacity>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignSelf: 'flex-end',
+            }}>
+            <TouchableOpacity
+              style={[styles.flipButton, { flex: 0.2, alignSelf: 'flex-end' }]}
+              onPress={this.onPressButtonIncrease.bind(this)}>
+              <Text style={styles.flipText}> + </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.flipButton, { flex: 0.2, alignSelf: 'flex-end' }]}
+              onPress={this.onPressButtonDecrease.bind(this)}>
+              <Text style={styles.flipText}> - </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignSelf: 'flex-end',
+            }}>
+            <TouchableOpacity
+              style={[styles.flipButton, styles.picButton, { flex: 0.6, alignSelf: 'flex-end' }]}
+              onPress={this.onPressButtonBorderWidth.bind(this)}>
+              <Text style={styles.flipText}> Toggle </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.flipButton, styles.galleryButton, { flex: 0.4, alignSelf: 'flex-end' }]}
+              onPress={this.onPressButtonSnapshot.bind(this)}>
+              <Text style={styles.flipText}> Snap </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
