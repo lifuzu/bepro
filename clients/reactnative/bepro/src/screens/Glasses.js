@@ -170,17 +170,6 @@ const getInitalParams = ({
   translate: calculateInitalTranslate(width, height),
 });
 
-GlassesScreen.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        uri: PropTypes.any,
-      })
-    })
-  }).isRequired,
-};
-
 export default class GlassesScreen extends React.Component {
 
   view = null;
@@ -452,18 +441,7 @@ export default class GlassesScreen extends React.Component {
             }}
             source={{ uri: this.props.navigation.state.params.uri ? this.props.navigation.state.params.uri : remote }}
           />
-          <Button
-            onPress={this.onPressButtonDecrease}
-            title="Decrease"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          />
-          <Button
-            onPress={this.onPressButtonIncrease}
-            title="Increase"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          />
+
           <Button
             onPress={this.onPressButtonBorderWidth}
             title="Toggle"
@@ -502,6 +480,17 @@ export default class GlassesScreen extends React.Component {
     );
   }
 }
+
+GlassesScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        uri: PropTypes.any,
+      })
+    })
+  }).isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {
