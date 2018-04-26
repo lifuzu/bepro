@@ -230,14 +230,8 @@ export default class GlassesScreen extends React.Component {
       scalesAreEqual(imageScale, imageInitialScale) &&
       height * imageInitialScale < screenHeight
       ) {
-      // const backgroundOpacity = Math.abs(
-      //   dy * BACKGROUND_OPACITY_MULTIPLIER
-      //   );
 
       this.imageTranslateValue.y.setValue(y + dy);
-      // this.modalBackgroundOpacity.setValue(
-      //   backgroundOpacity > 1 ? 1 : backgroundOpacity
-      // );
     }
 
     const currentDistance = getDistance(touches);
@@ -259,12 +253,12 @@ export default class GlassesScreen extends React.Component {
     if (nextScale < imageInitialScale) {
       nextScale = imageInitialScale;
       this.setState({
-        width: this.state.width - 10
+        width: this.state.width > screenWidth / 2 ? this.state.width - 5 : screenWidth / 2
       })
     } else if (nextScale > SCALE_MAXIMUM) {
       nextScale = SCALE_MAXIMUM;
       this.setState({
-        width: this.state.width + 10
+        width: this.state.width < screenWidth ? this.state.width + 5 : screenWidth
       })
     }
 
