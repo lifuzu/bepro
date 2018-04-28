@@ -1,3 +1,6 @@
+/*jslint node: true */
+"use strict";
+
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -24,5 +27,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/index'));
 app.use('/jenkins/job', require('./routes/jenkins/job'));
 app.use('/users', require('./routes/users'));
+app.use('/uploads', require('./routes/uploads'));
 
 module.exports = app;

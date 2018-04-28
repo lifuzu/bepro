@@ -13,6 +13,11 @@ module.exports = {
   "react"
   ],
   "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "globals": {
+    "module": true,
+    "console": true,
+    "__dirname": true,
+  },
   "rules": {
     "comma-dangle": 0,
     "react/jsx-uses-vars": 1,
