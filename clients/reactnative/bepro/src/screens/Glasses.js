@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Button, Dimensions, Image, PanResponder, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Button, Dimensions, Image, PanResponder, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { FileSystem, Constants, takeSnapshotAsync } from 'expo';
 import isIPhoneX from 'react-native-is-iphonex';
@@ -63,6 +63,7 @@ const FREEZE_SCROLL_DISTANCE = 15;
 export const timestamp = (presision=1) => Math.round((new Date()).getTime() / presision);
 
 const ensureDirAsync = async (dir, intermediates=true) => {
+
   const props =  await FileSystem.getInfoAsync(dir)
   if( props.exists && props.isDirectory){
     return props;
@@ -72,6 +73,7 @@ const ensureDirAsync = async (dir, intermediates=true) => {
 }
 
 const snapViewAsync =  async (view, format='png') => {
+
   const dir = await ensureDirAsync(VIEWSNAPS_DIR);
   const snapshot = `${dir.uri}${timestamp()}.${format}`;
   const temp = await takeSnapshotAsync(view, {format, quality:1, result:'file'})
@@ -82,6 +84,7 @@ const snapViewAsync =  async (view, format='png') => {
 }
 
 const snapUploadAsync = async (snap) => {
+
   const data = new FormData();
   data.append('file', {
     uri: snap.uri,
@@ -89,7 +92,7 @@ const snapUploadAsync = async (snap) => {
     name: snap.uri.split('/').reverse()[0]
   });
 
-  return await axios.post(
+  const response = await axios.post(
     `http://b6a49f96.ngrok.io/uploads`,
     data,
     {
@@ -97,8 +100,17 @@ const snapUploadAsync = async (snap) => {
         'Content-Type': 'multipart/form-data',
       }
     },
-  ).catch(function (error) {
-    console.log(JSON.stringify(error));
+  )
+
+  // console.log(JSON.stringify(response.data));
+  return response.data[0];
+}
+
+const shareSnap = (data) => {
+  Share.share({
+    message: `http://b6a49f96.ngrok.io/` + data.path,
+    title: 'Check out this photo',
+    url: `http://b6a49f96.ngrok.io/` + data.path,
   });
 }
 
@@ -426,8 +438,8 @@ export default class GlassesScreen extends React.Component {
   onPressButtonSnapshot = async () => {
 
     const snapshot = await snapViewAsync(this.view)
-    console.log(snapshot) // eslint-disable-line  no-undef
-    await snapUploadAsync(snapshot)
+    const data = await snapUploadAsync(snapshot)
+    shareSnap(data)
   }
 
   onPressButtonIncrease = () => {
