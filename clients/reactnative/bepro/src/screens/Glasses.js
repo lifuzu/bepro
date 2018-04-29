@@ -3,6 +3,7 @@ import { Animated, Button, Dimensions, Image, PanResponder, StyleSheet, Text, To
 import PropTypes from 'prop-types';
 import { FileSystem, Constants, takeSnapshotAsync } from 'expo';
 import isIPhoneX from 'react-native-is-iphonex';
+import axios from 'axios';
 
 type TouchType = {
   pageX: number,
@@ -62,22 +63,43 @@ const FREEZE_SCROLL_DISTANCE = 15;
 export const timestamp = (presision=1) => Math.round((new Date()).getTime() / presision);
 
 const ensureDirAsync = async (dir, intermediates=true) => {
-    const props =  await FileSystem.getInfoAsync(dir)
-    if( props.exists && props.isDirectory){
-      return props;
-    }
-    await FileSystem.makeDirectoryAsync(dir, {intermediates})
-    return await ensureDirAsync(dir, intermediates)
+  const props =  await FileSystem.getInfoAsync(dir)
+  if( props.exists && props.isDirectory){
+    return props;
+  }
+  await FileSystem.makeDirectoryAsync(dir, {intermediates})
+  return await ensureDirAsync(dir, intermediates)
 }
 
 const snapViewAsync =  async (view, format='png') => {
-    const dir = await ensureDirAsync(VIEWSNAPS_DIR);
-    const snapshot = `${dir.uri}${timestamp()}.${format}`;
-    const temp = await takeSnapshotAsync(view, {format, quality:1, result:'file'})
-    await FileSystem.moveAsync({from:temp, to:snapshot});
-    const info =  await FileSystem.getInfoAsync(snapshot, {md5:true})
-    const type = `image/${format}`;
-    return { ...info, type};
+  const dir = await ensureDirAsync(VIEWSNAPS_DIR);
+  const snapshot = `${dir.uri}${timestamp()}.${format}`;
+  const temp = await takeSnapshotAsync(view, {format, quality:1, result:'file'})
+  await FileSystem.moveAsync({from:temp, to:snapshot});
+  const info =  await FileSystem.getInfoAsync(snapshot, {md5:true})
+  const type = `image/${format}`;
+  return { ...info, type};
+}
+
+const snapUploadAsync = async (snap) => {
+  const data = new FormData();
+  data.append('file', {
+    uri: snap.uri,
+    type: snap.type,
+    name: snap.uri.split('/').reverse()[0]
+  });
+
+  return await axios.post(
+    `http://b6a49f96.ngrok.io/uploads`,
+    data,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    },
+  ).catch(function (error) {
+    console.log(JSON.stringify(error));
+  });
 }
 
 const generatePanHandlers = (onStart, onMove, onRelease): any =>
@@ -174,6 +196,7 @@ const getInitalParams = ({
 export default class GlassesScreen extends React.Component {
 
   view = null;
+  timer = null;
 
   constructor(props) {
     super(props)
@@ -404,12 +427,18 @@ export default class GlassesScreen extends React.Component {
 
     const snapshot = await snapViewAsync(this.view)
     console.log(snapshot) // eslint-disable-line  no-undef
+    await snapUploadAsync(snapshot)
   }
 
   onPressButtonIncrease = () => {
     this.setState({
       width: this.state.width < screenWidth ? this.state.width + 2 : screenWidth
     })
+    this.timer = setTimeout(this.onPressButtonIncrease, 100);
+  }
+
+  onPressButtonIncreaseOut = () => {
+    clearTimeout(this.timer);
   }
 
   onPressButtonDecrease = () => {
@@ -422,7 +451,7 @@ export default class GlassesScreen extends React.Component {
     const resizeMode = 'center'
 
     const panStyle = {
-      transform: this.imageTranslateValue.getTranslateTransform() //this.state.pan.getTranslateTransform()
+      transform: this.imageTranslateValue.getTranslateTransform(),
     }
 
     return (
@@ -433,11 +462,11 @@ export default class GlassesScreen extends React.Component {
         }}
       >
         <View ref={view => this.view = view}
+          collapsable={false}
           style={{
-            flex: 0.8,
+            flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: 100,
           }}>
           <View
             style={{
@@ -483,7 +512,6 @@ export default class GlassesScreen extends React.Component {
             paddingBottom: isIPhoneX ? 20 : 0,
             backgroundColor: 'transparent',
             flexDirection: 'row',
-            borderWidth: 1,
           }}>
           <View
             style={{
@@ -493,7 +521,8 @@ export default class GlassesScreen extends React.Component {
             }}>
             <TouchableOpacity
               style={[styles.flipButton, { flex: 0.2, alignSelf: 'flex-end' }]}
-              onPress={this.onPressButtonIncrease.bind(this)}>
+              onPressIn={this.onPressButtonIncrease.bind(this)}
+              onPressOut={this.onPressButtonIncreaseOut.bind(this)}>
               <Text style={styles.flipText}> + </Text>
             </TouchableOpacity>
             <TouchableOpacity
