@@ -17,6 +17,9 @@ module.exports = {
     "module": true,
     "console": true,
     "__dirname": true,
+    "FormData": true,
+    "setTimeout": true,
+    "clearTimeout": true,
   },
   "rules": {
     "comma-dangle": 0,
