@@ -3,6 +3,7 @@ import React from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity, Slider, Vibration } from 'react-native';
 import GalleryScreen from './Gallery';
 import isIPhoneX from 'react-native-is-iphonex';
+import PropTypes from 'prop-types';
 
 const landmarkSize = 5;
 
@@ -250,7 +251,7 @@ export default class CameraScreen extends React.Component {
             alignSelf: 'flex-end',
           }}>
           <TouchableOpacity
-            style={[styles.flipButton, { flex: 0.25, alignSelf: 'flex-end' }]}
+            style={[styles.flipButton, { flex: 0.3, alignSelf: 'flex-end' }]}
             onPress={this.toggleFacing.bind(this)}>
             <Text style={styles.flipText}> FLIP </Text>
           </TouchableOpacity>
@@ -265,14 +266,9 @@ export default class CameraScreen extends React.Component {
             <Text style={styles.flipText}> - </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.flipButton, styles.picButton, { flex: 0.3, alignSelf: 'flex-end' }]}
+            style={[styles.flipButton, styles.picButton, { flex: 0.5, alignSelf: 'flex-end' }]}
             onPress={this.takePicture.bind(this)}>
             <Text style={styles.flipText}> SNAP </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.flipButton, styles.galleryButton, { flex: 0.25, alignSelf: 'flex-end' }]}
-            onPress={this.toggleView.bind(this)}>
-            <Text style={styles.flipText}> Gallery </Text>
           </TouchableOpacity>
         </View>
         {this.renderFaces()}
@@ -289,6 +285,12 @@ export default class CameraScreen extends React.Component {
     return <View style={styles.container}>{content}</View>;
   }
 }
+
+CameraScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -449,7 +449,7 @@ export default class GlassesScreen extends React.Component {
     this.timer = setTimeout(this.onPressButtonIncrease, 100);
   }
 
-  onPressButtonIncreaseOut = () => {
+  onPressButtonStopTimer = () => {
     clearTimeout(this.timer);
   }
 
@@ -457,6 +457,7 @@ export default class GlassesScreen extends React.Component {
     this.setState({
       width: this.state.width > screenWidth / 5 ? this.state.width - 2 : screenWidth / 5
     })
+    this.timer = setTimeout(this.onPressButtonDecrease, 100);
   }
 
   render() {
@@ -534,12 +535,13 @@ export default class GlassesScreen extends React.Component {
             <TouchableOpacity
               style={[styles.flipButton, { flex: 0.2, alignSelf: 'flex-end' }]}
               onPressIn={this.onPressButtonIncrease.bind(this)}
-              onPressOut={this.onPressButtonIncreaseOut.bind(this)}>
+              onPressOut={this.onPressButtonStopTimer.bind(this)}>
               <Text style={styles.flipText}> + </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.flipButton, { flex: 0.2, alignSelf: 'flex-end' }]}
-              onPress={this.onPressButtonDecrease.bind(this)}>
+              onPressIn={this.onPressButtonDecrease.bind(this)}
+              onPressOut={this.onPressButtonStopTimer.bind(this)}>
               <Text style={styles.flipText}> - </Text>
             </TouchableOpacity>
           </View>
@@ -550,14 +552,14 @@ export default class GlassesScreen extends React.Component {
               alignSelf: 'flex-end',
             }}>
             <TouchableOpacity
-              style={[styles.flipButton, styles.picButton, { flex: 0.6, alignSelf: 'flex-end' }]}
+              style={[styles.flipButton, styles.galleryButton, { flex: 0.4, alignSelf: 'flex-end' }]}
               onPress={this.onPressButtonBorderWidth.bind(this)}>
               <Text style={styles.flipText}> Toggle </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.flipButton, styles.galleryButton, { flex: 0.4, alignSelf: 'flex-end' }]}
+              style={[styles.flipButton, styles.picButton, { flex: 0.6, alignSelf: 'flex-end' }]}
               onPress={this.onPressButtonSnapshot.bind(this)}>
-              <Text style={styles.flipText}> Snap </Text>
+              <Text style={styles.flipText}> Share </Text>
             </TouchableOpacity>
           </View>
         </View>
