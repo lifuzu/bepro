@@ -49,7 +49,8 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const remote = 'https://i.pinimg.com/originals/33/2c/2f/332c2f5e1e339a19c5a24979a0582c76.png';
 // 'https://cdn.pixabay.com/photo/2014/04/03/09/59/head-309540_960_720.png'
 // 'http://tupian.aladd.net/2017/9/9.30/qinglvtouxiangtupian.jpg';
-const obj = 'http://www.pngmart.com/files/1/Glasses-PNG-Clipart.png';
+const glasses = 'http://www.pngmart.com/files/1/Glasses-PNG-Clipart.png';
+const necklace = 'https://4.imimg.com/data4/IL/OI/MY-6778726/diamond-necklace-500x500.png'
 
 const VIEWSNAPS_DIR = FileSystem.documentDirectory + 'images/';
 const BORDER_WIDTH = StyleSheet.hairlineWidth;
@@ -210,63 +211,84 @@ export default class GlassesScreen extends React.Component {
   view = null;
   timer = null;
 
+  // images = [
+  //   'http://www.pngmart.com/files/1/Glasses-PNG-Clipart.png',
+  //   'https://4.imimg.com/data4/IL/OI/MY-6778726/diamond-necklace-500x500.png'
+  // ];
+
   constructor(props) {
     super(props)
 
     this.state = {
       borderWidth: BORDER_WIDTH,
 
-      imageScale: 1,
-      imageTranslate: {x: 0, y: 0},
+      activeIndex: 0,
+
+      // imageScale: 1,
+      // imageTranslate: {x: 0, y: 0},
+
+      // imagesWidth: this.images.map( () => { return screenWidth } ),
     };
 
-    this.imageScaleValue = new Animated.Value(1);
-    this.imageTranslateValue = new Animated.ValueXY();
+    this.images = [
+      'http://www.pngmart.com/files/1/Glasses-PNG-Clipart.png',
+      'https://4.imimg.com/data4/IL/OI/MY-6778726/diamond-necklace-500x500.png'
+    ];
 
-    this.panResponder = generatePanHandlers(
+    this.pan = this.images.map( () => new Animated.ValueXY() );
+    this.imagesTranslate = this.images.map( () => { return { x: 0, y: 0 } } );
+    this.imagesScale = this.images.map( () => { return 1 } );
+    this.imagesWidth = this.images.map( () => { return screenWidth } );
+
+    // this.imageScaleValue = new Animated.Value(1);
+    // this.imageTranslateValue = new Animated.ValueXY();
+
+    this.panResponder = (activeIndex = 0) => generatePanHandlers(
       (event: EventType, gestureState: GestureState): void =>
-        this.onGestureStart(event.nativeEvent, gestureState),
+        this.onGestureStart(event.nativeEvent, gestureState, activeIndex),
       (event: EventType, gestureState: GestureState): void =>
-        this.onGestureMove(event.nativeEvent, gestureState),
+        this.onGestureMove(event.nativeEvent, gestureState, activeIndex),
       (event: EventType, gestureState: GestureState): void =>
-        this.onGestureRelease(event.nativeEvent, gestureState)
+        this.onGestureRelease(event.nativeEvent, gestureState, activeIndex)
     );
   }
 
-  onGestureStart(event: EventType) {
+  onGestureStart(event: EventType, gestureState: GestureState, activeIndex: number) {
     this.initialTouches = event.touches;
     this.currentTouchesNum = event.touches.length;
+
+    this.setState({ activeIndex })
   }
 
-  onGestureMove(event: EventType, gestureState: GestureState) {
+  onGestureMove(event: EventType, gestureState: GestureState, activeIndex: number) {
 
     if (this.currentTouchesNum === 1 && event.touches.length === 2) {
       this.initialTouches = event.touches;
     }
 
-    const {imageScale, imageTranslate} = this.state;
+    const {imageScale} = this.state;
     const {touches} = event;
-    const {x, y} = imageTranslate;
+    const {x, y} = this.imagesTranslate[activeIndex];
     const {dx, dy} = gestureState;
     const imageInitialScale = this.getInitialScale();
     const height = IMAGE_HEIGHT;
 
     // if (imageScale !== imageInitialScale) {
-      this.imageTranslateValue.x.setValue(x + dx);
+      this.pan[activeIndex].x.setValue(x + dx);
     // }
 
     // Do not allow to move image verticaly untill it fits to the screen
     // if (imageScale * height > screenHeight) {
-      this.imageTranslateValue.y.setValue(y + dy);
+      this.pan[activeIndex].y.setValue(y + dy);
     // }
 
     // if image not scaled and fits to the screen
     if (
       scalesAreEqual(imageScale, imageInitialScale) &&
       height * imageInitialScale < screenHeight
-      ) {
+    ) {
 
-      this.imageTranslateValue.y.setValue(y + dy);
+      this.pan[activeIndex].y.setValue(y + dy);
     }
 
     const currentDistance = getDistance(touches);
@@ -274,6 +296,12 @@ export default class GlassesScreen extends React.Component {
 
     const scrollEnabled = Math.abs(dy) < FREEZE_SCROLL_DISTANCE;
     this.setState({scrollEnabled});
+
+    this.imagesTranslate[activeIndex] = { x: x + dx, y: y + dy };
+
+    // this.setState({
+    //   imageTranslate: {x: x + dx, y: y + dy},
+    // });
 
     if (!initialDistance) {
       return;
@@ -283,89 +311,113 @@ export default class GlassesScreen extends React.Component {
       return;
     }
 
-    let nextScale = getScale(currentDistance, initialDistance) * imageScale;
+    let nextScale = getScale(currentDistance, initialDistance) * this.imagesScale[activeIndex];
+    console.log('nextScale:', nextScale)
 
     if (nextScale < imageInitialScale) {
       nextScale = imageInitialScale;
-      this.setState({
-        width: this.state.width > screenWidth / 5 ? this.state.width - 10 : screenWidth / 5
-      })
+      // if (this.state.imagesWidth[activeIndex] > screenWidth / 5) {
+      //   let updatedImagesWidth = [...this.state.imagesWidth]
+      //   updatedImagesWidth[activeIndex] -= 10
+      //   this.setState({
+      //     imagesWidth: updatedImagesWidth
+      //   });
+      // }
+
+      this.imagesWidth[activeIndex] = this.imagesWidth[activeIndex] > screenWidth / 5 ? this.imagesWidth[activeIndex] - 10 : screenWidth / 5;
+    //   this.setState({
+    //     width: this.state.width > screenWidth / 5 ? this.state.width - 10 : screenWidth / 5
+      // })
     } else if (nextScale > SCALE_MAXIMUM) {
       nextScale = SCALE_MAXIMUM;
-      this.setState({
-        width: this.state.width < screenWidth ? this.state.width + 10 : screenWidth
-      })
+      // if (this.state.imagesWidth[activeIndex] < screenWidth) {
+      //   let updatedImagesWidth = [...this.state.imagesWidth]
+      //   updatedImagesWidth[activeIndex] += 10
+      //   this.setState({
+      //     imagesWidth: updatedImagesWidth
+      //   });
+      // }
+      // this.setState({
+      //   imagesWidth: Object.assign([...this.state.imagesWidth, { activeIndex: this.state.imagesWidth[this.state.activeIndex] < screenWidth ? this.state.imagesWidth[this.state.activeIndex] + 10 : screenWidth }])
+      // });
+      this.imagesWidth[activeIndex] = this.imagesWidth[activeIndex] < screenWidth ? this.imagesWidth[activeIndex] + 10 : screenWidth;
+    //   this.setState({
+    //     width: this.state.width < screenWidth ? this.state.width + 10 : screenWidth
+    //   })
     }
 
-    this.imageScaleValue.setValue(nextScale);
-    this.currentTouchesNum = event.touches.length;
+    console.log(this.state.imagesWidth)
+
+    this.imagesScale[activeIndex] = nextScale;
+    // this.imageScaleValue.setValue(nextScale);
+    // this.currentTouchesNum = event.touches.length;
   }
 
-  onGestureRelease(event: EventType, gestureState: GestureState) {
+  onGestureRelease(event: EventType, gestureState: GestureState, activeIndex: number) {
 
     // this.state.pan.flattenOffset()
 
-    const {imageScale} = this.state;
+    // const {imageScale} = this.state;
 
-    let {_value: scale} = this.imageScaleValue;
+    // let {_value: scale} = this.imageScaleValue;
 
-    const {dx, dy, vy} = gestureState;
-    const imageInitialScale = this.getInitialScale();
-    const imageInitialTranslate = this.getInitialTranslate();
+    // const {dx, dy, vy} = gestureState;
+    // const imageInitialScale = this.getInitialScale();
+    // const imageInitialTranslate = this.getInitialTranslate();
 
-    // Position haven't changed, so it just tap
-    if (event && !dx && !dy && scalesAreEqual(imageScale, scale)) {
-      // Double tap timer is launced, its double tap
+    // // Position haven't changed, so it just tap
+    // if (event && !dx && !dy && scalesAreEqual(imageScale, scale)) {
+    //   // Double tap timer is launced, its double tap
 
-      if (this.doubleTapTimer) {
-        clearTimeout(this.doubleTapTimer); // eslint-disable-line  no-undef
-        this.doubleTapTimer = null;
+    //   if (this.doubleTapTimer) {
+    //     clearTimeout(this.doubleTapTimer); // eslint-disable-line  no-undef
+    //     this.doubleTapTimer = null;
 
-        scale = scalesAreEqual(imageInitialScale, scale)
-            ? scale * SCALE_MAX_MULTIPLIER
-            : imageInitialScale;
+    //     scale = scalesAreEqual(imageInitialScale, scale)
+    //         ? scale * SCALE_MAX_MULTIPLIER
+    //         : imageInitialScale;
 
-        Animated.timing(this.imageScaleValue, {
-            toValue: scale,
-            duration: 300,
-        }).start();
+    //     Animated.timing(this.imageScaleValue, {
+    //         toValue: scale,
+    //         duration: 300,
+    //     }).start();
 
-      } else {
-          this.doubleTapTimer = setTimeout(() => { // eslint-disable-line  no-undef
-              this.doubleTapTimer = null;
-          }, 200);
-      }
-    }
+    //   } else {
+    //       this.doubleTapTimer = setTimeout(() => { // eslint-disable-line  no-undef
+    //           this.doubleTapTimer = null;
+    //       }, 200);
+    //   }
+    // }
 
-    const {x, y} = this.calcultateNextTranslate(dx, dy, scale);
-    const scrollEnabled =
-      scale === this.getInitialScale() &&
-      x === imageInitialTranslate.x &&
-      y === imageInitialTranslate.y;
+    // const {x, y} = this.calcultateNextTranslate(dx, dy, scale);
+    // const scrollEnabled =
+    //   scale === this.getInitialScale() &&
+    //   x === imageInitialTranslate.x &&
+    //   y === imageInitialTranslate.y;
 
-    Animated.parallel(
-      [
-        Animated.timing(this.imageTranslateValue.x, {
-          toValue: x,
-          duration: 100,
-        }),
-        Animated.timing(this.imageTranslateValue.y, {
-          toValue: y,
-          duration: 100,
-        }),
-      ].filter(Boolean)
-    ).start();
+    // Animated.parallel(
+    //   [
+    //     Animated.timing(this.pan[activeIndex].x, {
+    //       toValue: x,
+    //       duration: 100,
+    //     }),
+    //     Animated.timing(this.pan[activeIndex].y, {
+    //       toValue: y,
+    //       duration: 100,
+    //     }),
+    //   ].filter(Boolean)
+    // ).start();
 
-    this.setState({
-      imageScale: scale,
-      imageTranslate: {x, y},
-      scrollEnabled,
-    });
+    // this.setState({
+    //   imageScale: scale,
+    //   imageTranslate: {x, y},
+    //   scrollEnabled,
+    // });
   }
 
   getInitialScale(index: number): number {
 
-    return 1;
+    return 0.5;
   }
 
   getInitialTranslate(index: number): TranslateType {
@@ -392,25 +444,25 @@ export default class GlassesScreen extends React.Component {
           let nextTranslate = axis === 'x' ? x + dx : y + dy;
 
           // Less than the screen
-          if (screenSize > scale * imageSize) {
-              if (width >= height) {
-                  nextTranslate = (screenSize - imageSize) / 2;
-              } else {
-                  nextTranslate =
-                      screenSize / 2 -
-                      imageSize * (scale / imageInitialScale) / 2;
-              }
+          // if (screenSize > scale * imageSize) {
+          //     if (width >= height) {
+          //         nextTranslate = (screenSize - imageSize) / 2;
+          //     } else {
+          //         nextTranslate =
+          //             screenSize / 2 -
+          //             imageSize * (scale / imageInitialScale) / 2;
+          //     }
 
-              return nextTranslate;
-          }
+          //     return nextTranslate;
+          // }
 
-          if (nextTranslate > leftLimit) {
-              nextTranslate = leftLimit;
-          }
+          // if (nextTranslate > leftLimit) {
+          //     nextTranslate = leftLimit;
+          // }
 
-          if (nextTranslate < rightLimit) {
-              nextTranslate = rightLimit;
-          }
+          // if (nextTranslate < rightLimit) {
+          //     nextTranslate = rightLimit;
+          // }
 
           return nextTranslate;
       };
@@ -420,12 +472,17 @@ export default class GlassesScreen extends React.Component {
 
   onLayout = (e) => {
 
-    this.setState({
-      width: e.nativeEvent.layout.width,
-      height: e.nativeEvent.layout.height,
-      x: e.nativeEvent.layout.x,
-      y: e.nativeEvent.layout.y
-    })
+    // this.setState({
+    //   imagesWidth: Object.assign([...this.state.imagesWidth], { activeIndex: e.nativeEvent.layout.width })
+    // });
+    this.imagesWidth[this.state.activeIndex] = e.nativeEvent.layout.width
+
+    // this.setState({
+    //   width: e.nativeEvent.layout.width,
+    //   height: e.nativeEvent.layout.height,
+    //   // x: e.nativeEvent.layout.x,
+    //   // y: e.nativeEvent.layout.y
+    // })
   }
 
   onPressButtonBorderWidth = () => {
@@ -443,9 +500,14 @@ export default class GlassesScreen extends React.Component {
   }
 
   onPressButtonIncrease = () => {
-    this.setState({
-      width: this.state.width < screenWidth ? this.state.width + 2 : screenWidth
-    })
+    // this.setState({
+    //   width: this.state.width < screenWidth ? this.state.width + 2 : screenWidth
+    // })
+    // this.setState({
+    //   imagesWidth: Object.assign([...this.state.imagesWidth], { activeIndex: this.state.imagesWidth[this.state.activeIndex] < screenWidth ? this.state.imagesWidth[this.state.activeIndex] + 10 : screenWidth })
+    // });
+    this.imagesWidth[this.state.activeIndex] = this.imagesWidth[this.state.activeIndex] < screenWidth ? this.imagesWidth[this.state.activeIndex] + 10 : screenWidth;
+    console.log(this.state.imagesWidth)
     this.timer = setTimeout(this.onPressButtonIncrease, 100);
   }
 
@@ -454,17 +516,22 @@ export default class GlassesScreen extends React.Component {
   }
 
   onPressButtonDecrease = () => {
-    this.setState({
-      width: this.state.width > screenWidth / 5 ? this.state.width - 2 : screenWidth / 5
-    })
+    // this.setState({
+    //   width: this.state.width > screenWidth / 5 ? this.state.width - 2 : screenWidth / 5
+    // })
+    // this.setState({
+    //   imagesWidth: Object.assign([...this.state.imagesWidth], { activeIndex: this.state.imagesWidth[this.state.activeIndex] > screenWidth / 5 ? this.state.imagesWidth[this.state.activeIndex] - 10 : screenWidth / 5 })
+    // });
+    this.imagesWidth[this.state.activeIndex] = this.imagesWidth[this.state.activeIndex] > screenWidth / 5 ? this.imagesWidth[this.state.activeIndex] - 10 : screenWidth / 5;
+    console.log(this.state.imagesWidth)
     this.timer = setTimeout(this.onPressButtonDecrease, 100);
   }
 
   render() {
     const resizeMode = 'center'
 
-    const panStyle = {
-      transform: this.imageTranslateValue.getTranslateTransform(),
+    const panStyle = (index) => {
+      this.pan[index].getTranslateTransform()
     }
 
     return (
@@ -472,8 +539,7 @@ export default class GlassesScreen extends React.Component {
         style={{
           flex: 1,
           backgroundColor: '#eee',
-        }}
-      >
+        }}>
         <View ref={view => this.view = view}
           collapsable={false}
           style={{
@@ -488,8 +554,7 @@ export default class GlassesScreen extends React.Component {
               left: 0,
               width: '100%',
               height: '100%',
-            }}
-          >
+            }}>
             <Image
               style={{
                 flex: 1,
@@ -499,25 +564,30 @@ export default class GlassesScreen extends React.Component {
             />
           </View>
 
-          <Animated.View
-            onLayout={this.onLayout}
-            {...this.panResponder.panHandlers}
-            style={[panStyle, {
-              borderWidth: this.state.borderWidth,
-              width: this.state.width ? this.state.width : '100%',
-              height: this.state.width / 2,
-            }]}
-            >
-            <Image
-              style={{
-                flex: 1,
-                height: IMAGE_HEIGHT,
-                resizeMode: 'contain',
-              }}
-              source={{ uri: obj }}
-            />
+          {this.images.map((uri, index) => (
+            <Animated.View
+              key={index}
+              onLayout={this.onLayout}
+              {...this.panResponder(index).panHandlers}
+              style={[
+                panStyle(index),
+                this.pan[index].getLayout(),
+                {
+                  borderWidth: (this.state.activeIndex === index ? this.state.borderWidth : 0),
+                  width: this.imagesWidth[index],
+                  height: this.imagesWidth[index] / 2,
+                }]}>
+              <Image
+                style={{
+                  flex: 1,
+                  height: IMAGE_HEIGHT,
+                  resizeMode: 'contain',
+                }}
+                source={{ uri: uri }}
+              />
+            </Animated.View>
+          ))}
 
-          </Animated.View>
         </View>
         <View
           style={{
